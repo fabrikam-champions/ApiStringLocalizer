@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	  <version>1.0.0</version>
+	  <VersionSuffix Condition=" '$(BUILD_NUMBER)' == '' ">pre$([System.DateTime]::Now.ToString("yyyyMMddHHmm"))</VersionSuffix>
+	  <title>ApiStringLocalizer</title>
+	  <authors>FabrikamChampions</authors>
+	  <description>Gets localized strings based on an external API instead of resx files</description>
+	  <tags>HttpClient;IStringLocalizer;Localization;Generator</tags>
+	  <copyright>Copyright ©FabrikamChampions 2024</copyright>
+	  <DebugType>embedded</DebugType>
+	  <IsPackable>true</IsPackable>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+  </PropertyGroup>
+	<!--<Target Name="PushToLocalFeed" AfterTargets="Pack">
+		<Exec Command="C:\Nuget\nuget push $(MSBuildProjectDirectory)\$(PackageOutputPath)$(ProjectName).$(Version).nupkg -Source C:\LocalNuGetFeed" />
+	</Target>-->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+    <PackageReference Include="System.Text.Json" Version="8.0.3" />
+  </ItemGroup>
+
+</Project>
