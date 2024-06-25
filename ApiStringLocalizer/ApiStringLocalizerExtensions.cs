@@ -38,7 +38,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddHttpClient();
             services.AddMemoryCache();
-            services.TryAddSingleton<IStringLocalizerFactory, ApiStringLocalizerFactory>();
+            services.AddSingleton<IStringLocalizerFactory, ApiStringLocalizerFactory>();
+            services.AddLocalization();
         }
     }
 }
