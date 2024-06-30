@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ApiStringLocalizer
@@ -65,9 +66,10 @@ namespace ApiStringLocalizer
         }
         private async Task<IDictionary<string, string>> GetResources()
         {
-            var resources = await _memoryCache.GetOrCreateAsync($"{_resourceSource?.FullName}${_culture}", async cacheEntry => {
-                cacheEntry.AbsoluteExpirationRelativeToNow = _options.CacheTimeout;
-                var uri = $"{_options.BaseUrl}/{WebUtility.UrlEncode(_resourceSource?.FullName)}/{WebUtility.UrlEncode(_culture)}";
+            var cacheKey = new ApiStringLocalizerCacheKey { ResourceName = _resourceSource?.FullName, Culture = _culture };
+            var resources = await _memoryCache.GetOrCreateAsync(cacheKey, async cacheEntry => {
+                var routeParams = new Dictionary<string, string>() { { "ResourceName", WebUtility.UrlEncode(_resourceSource?.FullName) },{"Culture", WebUtility.UrlEncode(_culture) } };
+                var uri = $"{_options.BaseUrl}/{Format(_options.RouteTemplate, routeParams)}";
                 _logger.LogInformation($"Calling localization API. uri: {uri}");
                 HttpResponseMessage response = null;
                 string content = null;
@@ -76,6 +78,7 @@ namespace ApiStringLocalizer
                     response = await _httpClient.GetAsync(uri);
                     if (response.IsSuccessStatusCode)
                     {
+                        cacheEntry.AbsoluteExpirationRelativeToNow = _options.CacheTimeout ?? response.Headers.CacheControl?.MaxAge;
                         content = await response.Content.ReadAsStringAsync();
                         return JsonSerializer.Deserialize<Dictionary<string, string>>(content);
                     }
@@ -89,6 +92,18 @@ namespace ApiStringLocalizer
                 return new Dictionary<string, string>();
             });
             return resources;
+        }
+        public static string Format(string template, IDictionary<string, string> args)
+        {
+            if (template == null)
+                return template;
+            var pattern = new Regex(@"{(.*?)}");
+            var result = pattern.Replace(template, match =>
+            {
+                var propertyName = match.Groups[1].Value;
+                return args.Where(item => item.Key.Equals(propertyName, StringComparison.OrdinalIgnoreCase)).Select(item => item.Value).FirstOrDefault();
+            });
+            return result;
         }
     }
 }

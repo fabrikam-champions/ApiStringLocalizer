@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	  <version>1.0.2</version>
+	  <version>1.0.3</version>
 	  <VersionSuffix Condition=" '$(BUILD_NUMBER)' == '' ">pre$([System.DateTime]::Now.ToString("yyyyMMddHHmm"))</VersionSuffix>
 	  <title>ApiStringLocalizer</title>
 	  <authors>FabrikamChampions</authors>
@@ -15,9 +15,9 @@
 	  <PackageDescription>Gets localized strings based on an external API instead of resx files</PackageDescription>
 	  <RepositoryUrl>https://github.com/fabrikam-champions/ApiStringLocalizer</RepositoryUrl>
   </PropertyGroup>
-	<!--<Target Name="PushToLocalFeed" AfterTargets="Pack">
+	<Target Name="PushToLocalFeed" AfterTargets="Pack">
 		<Exec Command="C:\Nuget\nuget push $(MSBuildProjectDirectory)\$(PackageOutputPath)$(ProjectName).$(Version).nupkg -Source C:\LocalNuGetFeed" />
-	</Target>-->
+	</Target>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
