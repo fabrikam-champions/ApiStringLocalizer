@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,7 +81,8 @@ namespace ApiStringLocalizer
                     {
                         cacheEntry.AbsoluteExpirationRelativeToNow = _options.CacheTimeout ?? response.Headers.CacheControl?.MaxAge;
                         content = await response.Content.ReadAsStringAsync();
-                        return JsonSerializer.Deserialize<Dictionary<string, string>>(content);
+                        var result = JsonConvert.DeserializeObject<ApiStringLocalizerResponse>(content);
+                        return result.LocalizationData;
                     }
                 }
                 catch (Exception ex)
