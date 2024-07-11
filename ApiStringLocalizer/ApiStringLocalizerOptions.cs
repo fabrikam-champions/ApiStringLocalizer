@@ -8,5 +8,6 @@ namespace Microsoft.Extensions.DependencyInjection
         public string RouteTemplate { get; set; } = "{resourceName}/{culture}";
         public bool ThrowOnError { get; set; } = false;
         public TimeSpan? CacheTimeout { get; set; }
+        public bool DisableApiLocalization { get; set; } = false;
     }
 }

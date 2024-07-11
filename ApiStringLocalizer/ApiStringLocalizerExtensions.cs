@@ -31,14 +31,23 @@ namespace Microsoft.Extensions.DependencyInjection
         }
         private static void AddApiStringLocalizerServices(IServiceCollection services, Action<ApiStringLocalizerOptions> setupAction)
         {
-            AddApiStringLocalizerServices(services);
+            var options = new ApiStringLocalizerOptions();
+            setupAction.Invoke(options);
+            AddApiStringLocalizerServices(services, options);
             services.Configure(setupAction);
         }
         private static void AddApiStringLocalizerServices(IServiceCollection services)
         {
-            services.AddHttpClient();
-            services.AddMemoryCache();
-            services.AddSingleton<IStringLocalizerFactory, ApiStringLocalizerFactory>();
+            AddApiStringLocalizerServices(services, new ApiStringLocalizerOptions());
+        }
+        private static void AddApiStringLocalizerServices(IServiceCollection services, ApiStringLocalizerOptions options)
+        {
+            if (options?.DisableApiLocalization != false)
+            {
+                services.AddHttpClient();
+                services.AddMemoryCache();
+                services.AddSingleton<IStringLocalizerFactory, ApiStringLocalizerFactory>();
+            }
             services.AddLocalization();
         }
     }
