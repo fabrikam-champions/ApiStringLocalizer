@@ -12,7 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 throw new ArgumentNullException(nameof(services));
             }
-            AddApiStringLocalizerServices(services);
+            AddApiStringLocalizerServicesWithOptions(services,default);
             return services;
         }
         public static IServiceCollection AddApiStringLocalizer(this IServiceCollection services, Action<ApiStringLocalizerOptions> setupAction)
@@ -31,14 +31,21 @@ namespace Microsoft.Extensions.DependencyInjection
         }
         private static void AddApiStringLocalizerServices(IServiceCollection services, Action<ApiStringLocalizerOptions> setupAction)
         {
-            AddApiStringLocalizerServices(services);
+            ApiStringLocalizerOptions options = new ApiStringLocalizerOptions();
+
+            setupAction(options);
+
             services.Configure(setupAction);
+            AddApiStringLocalizerServicesWithOptions(services, options);
         }
-        private static void AddApiStringLocalizerServices(IServiceCollection services)
+        private static void AddApiStringLocalizerServicesWithOptions(IServiceCollection services, ApiStringLocalizerOptions options)
         {
-            services.AddHttpClient();
-            services.AddMemoryCache();
-            services.AddSingleton<IStringLocalizerFactory, ApiStringLocalizerFactory>();
+            if (!options.DisableApiLocalization)
+            {
+                services.AddHttpClient();
+                services.AddMemoryCache();
+                services.AddSingleton<IStringLocalizerFactory, ApiStringLocalizerFactory>();
+            }
             services.AddLocalization();
         }
     }
