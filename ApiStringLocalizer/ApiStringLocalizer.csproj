@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	  <version>1.0.4</version>
+	  <version>1.0.5</version>
 	  <VersionSuffix Condition=" '$(BUILD_NUMBER)' == '' ">pre$([System.DateTime]::Now.ToString("yyyyMMddHHmm"))</VersionSuffix>
 	  <title>ApiStringLocalizer</title>
 	  <authors>FabrikamChampions</authors>

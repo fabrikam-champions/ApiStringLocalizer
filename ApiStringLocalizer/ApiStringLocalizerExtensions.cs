@@ -42,7 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
         }
         private static void AddApiStringLocalizerServices(IServiceCollection services, ApiStringLocalizerOptions options)
         {
-            if (options?.DisableApiLocalization != false)
+            if (options?.DisableApiLocalization != true)
             {
                 services.AddHttpClient();
                 services.AddMemoryCache();
